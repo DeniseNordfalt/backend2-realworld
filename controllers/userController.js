@@ -39,17 +39,19 @@ exports.user_update = async function (req, res, next) {
 exports.create_user = async function (req, res, next) {
   const { username, password, email } = req.body.user;
   const user = new User({ username, password, email });
-  await user.save();
-  res.json(req.body);
-};
-exports.getUser = async function (req, res, next) {
-  const user = User.find({});
-  res.json({ user });
-};
-
-// @desc   Get user profile
-// @route  GET /profiles/:username
-// @access Authorization
+  await user.save(function(err, user ){
+    if(err){
+      res.status(400).json("there is already account with this emai")
+    }else {
+      res.json({user})
+    }
+  })
+}
+exports.getUser = async function(req, res, next) {
+  const user = await User.findOne({ user: req.body.user })
+  res.json({user})
+  console.log(user)
+}
 exports.getUserProfile = async function (req, res, next) {
   console.log(req.user);
   if (req.user) {
@@ -61,3 +63,4 @@ exports.getUserProfile = async function (req, res, next) {
     res.status(401).json({ message: "Not authorized" });
   }
 };
+
