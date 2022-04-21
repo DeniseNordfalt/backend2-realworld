@@ -39,9 +39,9 @@ const findArticlesQuery = async(query, user) => {
         const article = await Article.find({author: userId}).populate("author", "username bio image -_id")
         return article
     }else if (query.favorited !== undefined){
-        const article = await Article.find({favoritedBy: user.username}).populate("author", "username bio image -_id").select({favoritedBy: false})
-        article.forEach(item => item.favorited = true) 
-        return article 
+        const article = await Article.find({favoritedBy: query.favorited}).populate("author", "username bio image -_id").select({favoritedBy: false})
+        article.forEach(item => item.favorited = true)
+        return article  
     }else {   
         return await Article.find().populate("author", "username bio image -_id")
     }
