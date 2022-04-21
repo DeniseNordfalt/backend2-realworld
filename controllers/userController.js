@@ -42,16 +42,18 @@ exports.create_user = async function (req, res, next) {
   await user.save();
   res.json(req.body);
 };
+
 exports.getUser = async function (req, res, next) {
-  const user = User.find({});
-  res.json({ user });
+  const { username } = req.user;
+  const user = await User.findOne({username: username}).select({"password": false});
+  res.json({user});
 };
 
 // @desc   Get user profile
 // @route  GET /profiles/:username
 // @access Authorization
 exports.getUserProfile = async function (req, res, next) {
-  console.log(req.user);
+  //console.log(req.user);
   if (req.user) {
     const username = req.params.username;
     const user = await User.findOne({username: username});
