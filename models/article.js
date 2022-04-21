@@ -10,7 +10,7 @@ const articleSchema = mongoose.Schema({
     favorited: {type: Boolean, default: false},
     favoritedBy: [],
     favoritesCount: {type: Number, default: 0},
-    tagList: [],
+    tagList: [String],
 }, {timestamps: true})
 
 const Article = mongoose.model("Article", articleSchema)
@@ -18,6 +18,7 @@ const Article = mongoose.model("Article", articleSchema)
 const createArticle = async (article, user) => {
     article.author = user.userId
     article.slug = article.title
+    article.tagList = article.tagList.sort()
     const result = await Article.create(article).catch((err) => {
         if(err){
             return undefined
@@ -36,35 +37,6 @@ const findArticlesQuery = async(query, user) => {
         const user = await User.findOne({username: query.author})
         const userId = user._id
         const article = await Article.find({author: userId}).populate("author", "username bio image -_id")
-        /* const article2 = await Article.aggregate([{
-            '$match': {
-              'author': `${query.author}`
-            }
-          }, {
-            '$lookup': {
-              'from': 'users', 
-              'localField': 'username', 
-              'foreignField': 'author', 
-              'as': 'author'
-            }
-          }, {
-            '$unwind': {
-              'path': '$author'
-            }
-          }, {
-            '$match': {
-              'author.username': `${query.author}`
-            }
-          },
-          {
-              "$project": {
-                  "author.password": 0,
-                  "author.token": 0,
-                  "author._id": 0,
-                  "author.email": 0,
-              }
-          }
-        ]) */
         return article
     }else if (query.favorited !== undefined){
         const article = await Article.find({favoritedBy: user.username}).populate("author", "username bio image -_id").select({favoritedBy: false})
