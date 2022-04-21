@@ -47,13 +47,14 @@ exports.create_user = async function (req, res, next) {
     }
   })
 }
-exports.getUser = async function(req, res, next) {
-  const user = await User.findOne({ user: req.body.user })
-  res.json({user})
-  console.log(user)
-}
+exports.getUser = async function (req, res, next) {
+  const { username } = req.user;
+  const user = await User.findOne({username: username}).select({"password": false});
+  res.json({user});
+};
+
 exports.getUserProfile = async function (req, res, next) {
-  console.log(req.user);
+  //console.log(req.user);
   if (req.user) {
     const username = req.params.username;
     const user = await User.findOne({username: username});
