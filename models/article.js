@@ -50,6 +50,8 @@ const findOneArticle = async(slug) => {
     return await Article.findOne({slug: slug}).populate("author", "username bio image -_id")
 }
 const findOneAndUpdateArticle = async(slug, article) => { 
+    const user = await User.findOne({username: article.author.username})
+    article.author = user._id
     return await Article.findOneAndUpdate({slug: slug}, article, {new: true}).populate("author", "username bio image -_id")
 }
 const findAllTags = async() => {
