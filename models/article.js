@@ -35,8 +35,12 @@ const findArticlesQuery = async(query, user) => {
         
     } else if(query.author !== undefined){
         const user = await User.findOne({username: query.author})
+        if(user === null){
+            return null
+        }
         const userId = user._id
         const article = await Article.find({author: userId}).populate("author", "username bio image -_id")
+        console.log(article)
         return article
     }else if (query.favorited !== undefined){
         const article = await Article.find({favoritedBy: query.favorited}).populate("author", "username bio image -_id").select({favoritedBy: false})

@@ -14,7 +14,7 @@ exports.get_Article = async function(req, res, next) {
           let articlesCount = articles.length
           res.json({articles, articlesCount})
         }else {
-         res.sendStatus(404)   
+         res.json({articles: [], articlesCount: 0})   
         }
          
      
