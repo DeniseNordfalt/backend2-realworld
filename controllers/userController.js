@@ -59,7 +59,7 @@ exports.getUserProfile = async function (req, res, next) {
     const username = req.params.username;
     const user = await User.findOne({username: username});
     console.log("getUserProfile:", user);
-    res.json(user);
+    res.json({"profile": user});
   } else {
     res.status(401).json({ message: "Not authorized" });
   }
