@@ -26,7 +26,7 @@ const PORT = process.env.PORT;
 app.use(express.static(path.join(__dirname, "dist", "index.html")));
 app.use(express.static("dist"));
 
-app.use("/api/users", user)
+app.use("/api", user)
 app.use("/api/articles", article)
 app.use("/api/tags", tags)
 app.use("/api", profile)
